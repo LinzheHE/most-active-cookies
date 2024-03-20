@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="controller.CLIParserTest" tests="7" skipped="0" failures="0" errors="0" timestamp="2024-03-19T05:56:43" hostname="Linzhes-MBP-2" time="0.02">
+  <properties/>
+  <testcase name="validateArgs_InvalidArgsLength()" classname="controller.CLIParserTest" time="0.012"/>
+  <testcase name="validateArgs_NotDashD()" classname="controller.CLIParserTest" time="0.001"/>
+  <testcase name="validateArgs_Success()" classname="controller.CLIParserTest" time="0.004"/>
+  <testcase name="validateArgs_InvalidDateFormat()" classname="controller.CLIParserTest" time="0.001"/>
+  <testcase name="validateArgs_MissingDashD()" classname="controller.CLIParserTest" time="0.0"/>
+  <testcase name="validateArgs_InvalidLogFileFormat()" classname="controller.CLIParserTest" time="0.0"/>
+  <testcase name="validateArgs_LogFileNotFound()" classname="controller.CLIParserTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

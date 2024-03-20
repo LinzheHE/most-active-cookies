@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Handler.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">most-active-cookie</a> &gt; <a href="index.source.html" class="el_package">controller</a> &gt; <span class="el_source">Handler.java</span></div><h1>Handler.java</h1><pre class="source lang-java linenums">package controller;
+
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.time.LocalDate;
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
+import java.time.format.DateTimeParseException;
+import java.util.*;
+
+/**
+ * Class for searching the most active cookies for a given date
+ */
+<span class="fc" id="L15">public class Handler {</span>
+<span class="fc" id="L16">  private Integer currMax = 0;</span>
+
+  /**
+   * Key method to get the list of most active cookies for a given date
+   * @param filePath: String, the file path from the args
+   * @param dateStr: String, the given date from the args
+   * @return: a List of most active cookies for the given date, order does not matter
+   * @throws IOException: when cannot process the file
+   */
+  public List&lt;String&gt; getMostActiveCookies(String filePath, String dateStr) throws IOException {
+<span class="fc" id="L26">    List&lt;String&gt; cookiesForDate = getCookiesForDate(filePath, dateStr);</span>
+
+<span class="fc bfc" id="L28" title="All 2 branches covered.">    if (cookiesForDate.size() == 0) {</span>
+<span class="fc" id="L29">      return new ArrayList&lt;&gt;();</span>
+    } else {
+<span class="fc" id="L31">      HashMap&lt;String, Integer&gt; cookieFreqForDate = buildCookieFreqMap(cookiesForDate);</span>
+<span class="fc" id="L32">      return findCookies(cookieFreqForDate, currMax);</span>
+    }
+  }
+
+  /**
+   * Helper method to get the List of all cookies for the given date
+   * @param filePath: String, the file path from the args
+   * @param dateStr: String, the given date from the args
+   * @return: the List of all cookies for the given date
+   * @throws IOException when cannot process the file
+   */
+  private List&lt;String&gt; getCookiesForDate(String filePath, String dateStr) throws IOException {
+<span class="fc" id="L44">    List&lt;String&gt; cookieListForDate = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L45">    LocalDate targetDate = LocalDate.parse(dateStr);</span>
+
+<span class="fc" id="L47">    try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {</span>
+      // skip the first line
+<span class="fc" id="L49">      reader.readLine();</span>
+
+      String line;
+<span class="pc bpc" id="L52" title="1 of 2 branches missed.">      while ((line = reader.readLine()) != null) {</span>
+<span class="fc" id="L53">        String[] parts = line.split(&quot;,&quot;);</span>
+
+        try {
+          // Parse timestamp to OffsetDateTime
+<span class="fc" id="L57">          OffsetDateTime timestamp = OffsetDateTime.parse(parts[1]);</span>
+
+          // Convert timestamp to UTC time zone
+<span class="fc" id="L60">          OffsetDateTime timestampUtc = timestamp.withOffsetSameInstant(ZoneOffset.UTC);</span>
+
+          // Extract date part from timestamp
+<span class="fc" id="L63">          LocalDate timestampDate = timestampUtc.toLocalDate();</span>
+
+<span class="fc bfc" id="L65" title="All 2 branches covered.">          if (timestampDate.equals(targetDate)) {</span>
+<span class="fc" id="L66">            cookieListForDate.add(parts[0]);</span>
+<span class="pc bpc" id="L67" title="1 of 2 branches missed.">          } else if (timestampDate.isBefore(targetDate)) {</span>
+<span class="fc" id="L68">            break;</span>
+          }
+<span class="fc" id="L70">        } catch (DateTimeParseException e) {</span>
+<span class="fc" id="L71">          System.err.println(&quot;Error parsing timestamp: &quot; + e.getMessage());</span>
+<span class="fc" id="L72">          throw e;</span>
+<span class="fc" id="L73">        }</span>
+<span class="fc" id="L74">      }</span>
+    }
+
+<span class="fc" id="L77">    return cookieListForDate;</span>
+  }
+
+  /**
+   * Helper method for getting the &lt;cookie, frequency&gt; map
+   * @param cookiesForDate: the List of all cookies for the given date
+   * @return: a &lt;cookie, frequency&gt; map, keys are the cookies on that date, values are the frequencies of the cookies on that date
+   */
+  private HashMap&lt;String, Integer&gt; buildCookieFreqMap(List&lt;String&gt; cookiesForDate) {
+<span class="fc" id="L86">    HashMap&lt;String, Integer&gt; cookieFreq = new HashMap&lt;&gt;();</span>
+
+<span class="fc bfc" id="L88" title="All 2 branches covered.">    for (String cookie : cookiesForDate) {</span>
+<span class="fc" id="L89">      cookieFreq.put(cookie, cookieFreq.getOrDefault(cookie, 0) + 1);</span>
+<span class="fc" id="L90">      currMax = Math.max(currMax, cookieFreq.get(cookie));</span>
+<span class="fc" id="L91">    }</span>
+
+<span class="fc" id="L93">    return cookieFreq;</span>
+  }
+
+  /**
+   * Helper method to get the List of cookies with the highest freq
+   * @param cookieFreqForDate: &lt;cookie, frequency&gt; map for the given date
+   * @param freq: the recorded highest frequency
+   * @return: List of cookies with the highest freq
+   */
+  private List&lt;String&gt; findCookies(HashMap&lt;String, Integer&gt; cookieFreqForDate, Integer freq) {
+<span class="fc" id="L103">    List&lt;String&gt; mostActiveCookies = new ArrayList&lt;&gt;();</span>
+
+<span class="fc bfc" id="L105" title="All 2 branches covered.">    for (Map.Entry&lt;String, Integer&gt; entry : cookieFreqForDate.entrySet()) {</span>
+<span class="fc bfc" id="L106" title="All 2 branches covered.">      if (entry.getValue() == freq) {</span>
+<span class="fc" id="L107">        mostActiveCookies.add(entry.getKey());</span>
+      }
+<span class="fc" id="L109">    }</span>
+
+<span class="fc" id="L111">    return mostActiveCookies;</span>
+  }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

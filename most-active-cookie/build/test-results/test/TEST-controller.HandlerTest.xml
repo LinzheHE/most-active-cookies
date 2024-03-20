@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="controller.HandlerTest" tests="5" skipped="0" failures="0" errors="0" timestamp="2024-03-19T05:56:43" hostname="Linzhes-MBP-2" time="0.01">
+  <properties/>
+  <testcase name="getMostActiveCookies_NotExistDate()" classname="controller.HandlerTest" time="0.002"/>
+  <testcase name="getMostActiveCookies_Success()" classname="controller.HandlerTest" time="0.001"/>
+  <testcase name="getMostActiveCookies_WrongTimeStampFormat()" classname="controller.HandlerTest" time="0.002"/>
+  <testcase name="getMostActiveCookies_FileNotFound()" classname="controller.HandlerTest" time="0.0"/>
+  <testcase name="getMostActiveCookies_Success_DiffTimeZone()" classname="controller.HandlerTest" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[Error parsing timestamp: Text '2018-12-09T14:19:00' could not be parsed at index 19
+]]></system-err>
+</testsuite>
