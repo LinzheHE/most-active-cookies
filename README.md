@@ -2,6 +2,9 @@
 ## Assumption
 - assume users may use the application for different cookie_log files
 
+## Environment
+- The project is built using java and gradle.
+
 ## Execution
 1. clone the repo to you local machine
 2. cd to `repo_path/most-active-cookie/src/main/java`
@@ -13,4 +16,4 @@
   - you could replace the `2018-12-09` with other dates you want to query
 
 ## Test Coverage
-1. The project achieved 100% test coverage rate. [test report](/test_coverage_report.html).
+1. The project achieved 100% test coverage rate.
