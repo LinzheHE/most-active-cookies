@@ -1,7 +1,6 @@
 # most-active-cookies
 ## Assumption
 - assume users may use the application for different cookie_log files
-- assume the files' content are in the correct format (one column for cookie, one column for timestamp)
 
 ## Environment
 - The project is built using java and gradle.
